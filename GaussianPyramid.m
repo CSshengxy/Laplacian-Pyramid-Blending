@@ -7,10 +7,15 @@ function pyramid=GaussianPyramid(image, iternum)
     
     for i = 2 : iternum
         % gaussian filtering
+        % imfilter 对于rgb图像相当于三个通道分别处理,然后进行cat操作
         temp = imfilter(pyramid{i-1}, gaussian_filter, 'replicate');
         % down sampling
-        [row, col] = size(temp);
-        temp = temp(1:2:row, 1:2:col);
+        [rows, cols, channels] = size(temp);
+        if channels == 3
+            temp = temp(1:2:rows, 1:2:cols, :);
+        else
+            temp = temp(1:2:rows, 1:2:cols);
+        end
         pyramid{i} = temp;
     end
     
