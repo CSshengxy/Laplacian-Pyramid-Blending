@@ -9,27 +9,14 @@ function pyramid=LaplacianPyramid(image, iternum)
     for i = 1:iternum - 1
         % º∆À„I[i+1]
         temp = imfilter(handle_image, h_filter, 'replicate');
-        [rows, cols, channels] = size(temp);
-        if channels == 3
-            temp = temp(1:2:rows, 1:2:cols, :);
-        else
-            temp = temp(1:2:rows, 1:2:cols);
-        end
+        rows = size(temp, 1);
+        cols = size(temp, 2);
+        temp = temp(1:2:rows, 1:2:cols, :);
         origin_image = handle_image;
         handle_image = temp;
         % º∆À„EI[i+1]
-        temp = uint8(zeros(rows, cols, channels));
-        if channels == 3
-            temp(1:2:rows, 1:2:cols, :) = handle_image;
-            temp(2:2:rows, 2:2:cols, :) = handle_image;
-            temp(1:2:rows, 2:2:cols, :) = handle_image;
-            temp(2:2:rows, 1:2:cols, :) = handle_image;
-        else
-            temp(1:2:rows, 1:2:cols) = handle_image;
-            temp(2:2:rows, 2:2:cols) = handle_image;
-            temp(1:2:rows, 2:2:cols) = handle_image;
-            temp(2:2:rows, 1:2:cols) = handle_image;
-        end
+        temp = UpSampling(handle_image);
+        temp = temp(1:rows, 1:cols, :);
         temp = imfilter(temp, g_filter, 'replicate');
         e_handle_image = temp;
         % º∆À„b[i]
