@@ -1,10 +1,10 @@
 clear all;
 clc;
 
-leftImage = imread('apple.png');
-rightImage = imread('orange.png');
+leftImage = double(imread('apple.png'));
+rightImage = double(imread('orange.png'));
 
-iternum = 10;
+iternum = 5;
 
 if (size(leftImage) ~= size(rightImage))
     error('Input images are not the same size!')
@@ -12,13 +12,12 @@ end
 
 % 预处理，使图片height,width为偶数
 [rows, cols, channels] = size(leftImage);
-leftImage = leftImage(1:rows, 1:cols, :);
-rightImage = rightImage(1:rows, 1:cols, :);
 
 % mask gaussian
-mask = uint8(zeros(rows, cols, channels));
-mask(1:floor(rows/2), 1:floor(cols/2), :) = ones(floor(rows/2), floor(cols/2), channels);
+mask = double(zeros(rows, cols, channels));
+mask(:, 1:floor(cols/2), :) = ones(rows, floor(cols/2), channels);
 mask_pyramid = GaussianPyramid(mask, iternum);
+
 
 % leftImage pyramid and rightImage pyramid
 left_pyramid = LaplacianPyramid(leftImage, iternum);
@@ -32,13 +31,13 @@ end
 
 % reconstruct the blend image
 blendImage = LaplacianReconstruct(blend_pyramid);
-imwrite(blendImage, 'blendImage.png');
+imwrite(uint8(blendImage), 'blendImage.png');
 
 figure;
-imshow(leftImage);
+imshow(uint8(leftImage));
 title('leftImage');
 figure;
-imshow(rightImage);
+imshow(uint8(rightImage));
 title('rightImage');
 figure;
 imshow('blendImage.png');

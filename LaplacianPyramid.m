@@ -1,7 +1,7 @@
 function pyramid=LaplacianPyramid(image, iternum)
     h_filter = [1, 4, 6, 4, 1]*(1/16);
     h_filter = h_filter' * h_filter;
-    g_filter = h_filter;
+    g_filter = h_filter * 4;
     
     pyramid = cell(iternum, 1);
     handle_image = image;
